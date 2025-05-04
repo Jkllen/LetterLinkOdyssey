@@ -1,6 +1,7 @@
 package crosswordjava;
 
 import crosswordjava.App;
+import letterlinkodyssey.*;
 import java.util.List;
 
 import javafx.geometry.Insets;
@@ -39,6 +40,7 @@ public class GameView {
     private Button hintButton;
     private Button helpButton;
     private Button difficultyButton;
+    private Button pauseBtn;
     private Label healthLabel;
     private Label hintsLabel;
     private Runnable onComplete;
@@ -94,32 +96,44 @@ public class GameView {
         topContainer.setAlignment(Pos.CENTER);
         topContainer.setPadding(new Insets(5, 10, 5, 10));
 
-        Label titleLabel = new Label("Crossword Puzzle");
+        Label titleLabel = new Label("Crossword");
+        titleLabel.setStyle("-fx-text-fill: white");
         titleLabel.setFont(Font.font("System", FontWeight.BOLD, 24));
 
         HBox buttonBar = new HBox(12);
         buttonBar.setAlignment(Pos.CENTER);
 
         newGameButton = new Button("New Game");
+        newGameButton.setTranslateX(-80);
         newGameButton.setStyle("-fx-font-size: 12px;");
         newGameButton.setOnAction(e -> generateNewPuzzle());
 
         checkButton = new Button("Check");
+        checkButton.setTranslateX(420);
         checkButton.setStyle("-fx-font-size: 12px;");
         checkButton.setOnAction(e -> checkPuzzle());
 
         hintButton = new Button("Hint");
+        hintButton.setTranslateX(420);
         hintButton.setStyle("-fx-font-size: 12px;");
         hintButton.setOnAction(e -> provideHint());
 
         helpButton = new Button("Help");
+        helpButton.setTranslateX(400);
+        helpButton.setTranslateY(380);
         helpButton.setStyle("-fx-font-size: 12px;");
         helpButton.setOnAction(e -> App.switchToHelp());
 
         difficultyButton = new Button("Difficulty: Medium");
+        difficultyButton.setTranslateX(-250);
         difficultyButton.setStyle("-fx-font-size: 12px;");
         difficultyButton.setOnAction(e -> showDifficultyMenu());
-
+        
+        pauseBtn = new Button("");
+        pauseBtn.setAlignment(Pos.TOP_RIGHT);
+        pauseBtn.setOnAction(e -> {
+           //logic method here
+        });
         // Add health label
         healthLabel = new Label("Health: 30");
         healthLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: bold;");
@@ -128,7 +142,7 @@ public class GameView {
         hintsLabel = new Label("Hints: " + gameState.getAvailableHints());
         hintsLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: bold;");
 
-        buttonBar.getChildren().addAll(newGameButton, checkButton, hintButton, helpButton, difficultyButton,
+        buttonBar.getChildren().addAll(newGameButton, checkButton, hintButton, helpButton, pauseBtn, difficultyButton,
                 healthLabel, hintsLabel);
         topContainer.getChildren().addAll(titleLabel, buttonBar);
         root.setTop(topContainer);
@@ -203,7 +217,7 @@ public class GameView {
         } else if (gameState.getHealth() < 20) {
             healthLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: orange;");
         } else {
-            healthLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: black;");
+            healthLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: green;");
         }
     }
 
@@ -220,7 +234,7 @@ public class GameView {
         } else if (remainingHints == 1) {
             hintsLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: orange;");
         } else {
-            hintsLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: black;");
+            hintsLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: green;");
         }
     }
 
@@ -453,10 +467,6 @@ public class GameView {
                 disableInputs(); // Prevent further interaction
             }
         }
-
-        if (gameState.isPuzzleComplete()) {
-            showCompletionMessage();
-        }
     }
 
     /**
@@ -536,7 +546,6 @@ public class GameView {
      */
     private void showCompletionMessage() {
         showAlert("Congratulations", "You have completed the crossword puzzle!");
-
         if (onComplete != null) {
             onComplete.run();
         }

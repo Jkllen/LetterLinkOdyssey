@@ -61,7 +61,7 @@ public class Dictionary {
         addWord("SETTER", "Method that sets a value");
         addWord("GETTER", "Method that returns a value");
 
-        // Add some shorter words with common letters for good connections
+                // Add some shorter words with common letters for good connections
         addWord("API", "Application programming interface");
         addWord("APP", "Software for a specific purpose");
         addWord("BIT", "The smallest unit of data");
@@ -78,6 +78,7 @@ public class Dictionary {
         addWord("USE", "Consumption of a resource");
         addWord("VAR", "Variable declaration keyword");
         addWord("XML", "Extensible markup language");
+
     }
 
     /**
