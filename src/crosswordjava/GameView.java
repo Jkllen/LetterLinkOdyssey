@@ -1,5 +1,6 @@
 package crosswordjava;
 
+import crosswordjava.App;
 import java.util.List;
 
 import javafx.geometry.Insets;
@@ -24,7 +25,6 @@ import javafx.geometry.Side;
 import crosswordjava.model.CrosswordGrid;
 import crosswordjava.model.GameState;
 import crosswordjava.model.Word;
-import javafx.scene.effect.DropShadow;
 
 /**
  * Main game view
@@ -39,6 +39,8 @@ public class GameView {
     private Button hintButton;
     private Button helpButton;
     private Button difficultyButton;
+    private Label healthLabel;
+    private Label hintsLabel;
     private Runnable onComplete;
 
     private GameState gameState;
@@ -78,8 +80,7 @@ public class GameView {
     public Button getHelpButton(){
         return helpButton;
     }
-    
-    
+
     /**
      * Creates all UI components programmatically
      */
@@ -89,6 +90,7 @@ public class GameView {
 
         // TOP: Header with title and buttons
         VBox topContainer = new VBox(5);
+        topContainer.setAlignment(Pos.CENTER);
         topContainer.setAlignment(Pos.CENTER);
         topContainer.setPadding(new Insets(5, 10, 5, 10));
 
@@ -117,9 +119,17 @@ public class GameView {
         difficultyButton = new Button("Difficulty: Medium");
         difficultyButton.setStyle("-fx-font-size: 12px;");
         difficultyButton.setOnAction(e -> showDifficultyMenu());
-        
 
-        buttonBar.getChildren().addAll(newGameButton, checkButton, hintButton, helpButton, difficultyButton);
+        // Add health label
+        healthLabel = new Label("Health: 30");
+        healthLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: bold;");
+
+        // Add Hint label
+        hintsLabel = new Label("Hints: " + gameState.getAvailableHints());
+        hintsLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: bold;");
+
+        buttonBar.getChildren().addAll(newGameButton, checkButton, hintButton, helpButton, difficultyButton,
+                healthLabel, hintsLabel);
         topContainer.getChildren().addAll(titleLabel, buttonBar);
         root.setTop(topContainer);
 
@@ -128,11 +138,11 @@ public class GameView {
         crosswordGridPane.setAlignment(Pos.CENTER_LEFT);
         crosswordGridPane.setHgap(2);
         crosswordGridPane.setVgap(2);
-        
+       
         /*
         * Add Margin to the Border Pane to nudge away the crosswordGrid.
         * (This is an alternative method for to Manually adjust the Grid in BorderPane)
-        * Insets: top = 0, right = 0, bottom = 0, left = 100;
+        * Insets: top = 0, right = 0, bottom = 50, left = 100;
         */ 
         BorderPane.setMargin(crosswordGridPane, new Insets(0, 0, 50, 100));
         crosswordGridPane.setPadding(new Insets(5));
@@ -143,15 +153,15 @@ public class GameView {
         VBox rightContainer = new VBox(5);
         rightContainer.setTranslateX(-85);
         rightContainer.setTranslateY(15);
-        rightContainer.setPrefWidth(235); //170 orginally
-        rightContainer.setStyle("-fx-background-color: transparent;");
+        rightContainer.setPrefWidth(235);
+        rightContainer.setStyle("-fx-background-color: transparent");
         rightContainer.setPadding(new Insets(5));
 
         // Across clues
         ScrollPane acrossScrollPane = new ScrollPane();
         acrossScrollPane.setStyle("-fx-background-color: FFF0DB;");
         acrossScrollPane.setFitToWidth(true);
-        acrossScrollPane.setPrefHeight(150); //170 originally
+        acrossScrollPane.setPrefHeight(150);
 
         acrossCluesBox = new VBox(3);
         acrossCluesBox.setStyle("-fx-background-color: FFF0DB;");
@@ -178,10 +188,40 @@ public class GameView {
         bottomContainer.setPadding(new Insets(2, 10, 5, 10));
 
         Label statusLabel = new Label("Fill in the crossword puzzle using the clues provided.");
-        statusLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: white; -fx-font-weight: bold;");
+        statusLabel.setStyle("-fx-font-size: 11px;");
         bottomContainer.getChildren().add(statusLabel);
 
         root.setBottom(bottomContainer);
+    }
+
+    private void updateHealthDisplay() {
+        healthLabel.setText("Health: " + gameState.getHealth());
+
+        // Change color based on remaining health
+        if (gameState.getHealth() < 10) {
+            healthLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: red;");
+        } else if (gameState.getHealth() < 20) {
+            healthLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: orange;");
+        } else {
+            healthLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: black;");
+        }
+    }
+
+    private void updateHintsDisplay() {
+        int remainingHints = gameState.getAvailableHints();
+        hintsLabel.setText("Hints: " + remainingHints);
+
+        // Disable hint button when no hints are left
+        hintButton.setDisable(remainingHints <= 0);
+
+        // Change color based on remaining hints
+        if (remainingHints == 0) {
+            hintsLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: red;");
+        } else if (remainingHints == 1) {
+            hintsLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: orange;");
+        } else {
+            hintsLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: black;");
+        }
     }
 
     /**
@@ -222,8 +262,10 @@ public class GameView {
                 if (gameState.checkInput(row, col, input)) {
                     cell.setStyle("-fx-alignment: center; -fx-text-fill: black;");
                     gameState.getGrid().setUserInput(row, col, true);
-                } else {
-                    cell.setStyle("-fx-alignment: center; -fx-text-fill: red;");
+                }
+
+                if (gameState.checkInput(row, col, input)) {
+                    gameState.getGrid().setUserInput(row, col, true);
                 }
 
                 if (gameState.isPuzzleComplete()) {
@@ -240,6 +282,16 @@ public class GameView {
      */
     private void generateNewPuzzle() {
         clearGrid();
+
+        gameState.resetHealth(); // Reset health for new game
+        gameState.resetHints(); // Reset available hints
+
+        updateHealthDisplay();
+        updateHintsDisplay(); // Update hints display
+
+        // Re-enable buttons that might have been disabled after game over
+        checkButton.setDisable(false);
+        hintButton.setDisable(false);
 
         boolean success = gameState.generatePuzzleWithBacktracking();
         if (!success) {
@@ -367,6 +419,7 @@ public class GameView {
      */
     private void checkPuzzle() {
         CrosswordGrid grid = gameState.getGrid();
+        int incorrectCount = 0; // Count incorrect answers
 
         for (int row = 0; row < GRID_SIZE; row++) {
             for (int col = 0; col < GRID_SIZE; col++) {
@@ -378,12 +431,26 @@ public class GameView {
                             cell.setStyle("-fx-alignment: center; -fx-background-color: lightgreen;");
                             grid.setUserInput(row, col, true);
                         } else {
+                            cell.setText(""); // Clears the text if incorrect
                             cell.setStyle("-fx-alignment: center; -fx-background-color: #ff9999;");
+                            incorrectCount++; // Increment counter for incorrect answers
                         }
                     } else {
                         cell.setStyle("-fx-alignment: center; -fx-background-color: #ffffaa;");
                     }
                 }
+            }
+        }
+
+        // Reduce health for incorrect answers
+        if (incorrectCount > 0) {
+            gameState.decreaseHealth(incorrectCount);
+            updateHealthDisplay();
+
+            // Check for game over condition
+            if (gameState.isGameOver()) {
+                showGameOverMessage();
+                disableInputs(); // Prevent further interaction
             }
         }
 
@@ -393,9 +460,43 @@ public class GameView {
     }
 
     /**
+     * Shows game over message.
+     */
+    private void showGameOverMessage() {
+        Alert alert = new Alert(AlertType.WARNING);
+        alert.setTitle("Game Over");
+        alert.setHeaderText("You've run out of health!");
+        alert.setContentText("Click 'New Game' to try again.");
+        alert.showAndWait();
+    }
+
+    /**
+     * Disables all input fields when game is over.
+     */
+    private void disableInputs() {
+        for (int row = 0; row < GRID_SIZE; row++) {
+            for (int col = 0; col < GRID_SIZE; col++) {
+                if (gridCells[row][col].isEditable()) {
+                    gridCells[row][col].setDisable(true);
+                }
+            }
+        }
+        checkButton.setDisable(true);
+        hintButton.setDisable(true);
+    }
+
+    /**
      * Provides a hint by revealing a random cell.
      */
     private void provideHint() {
+        // Check if hints are available
+        if (!gameState.useHint()) {
+            showAlert("No Hints Left", "You've used all your available hints for this game.");
+            return;
+        }
+
+        updateHintsDisplay(); // Update the hints display after using a hint
+
         List<Word> words = gameState.getWords();
         CrosswordGrid grid = gameState.getGrid();
 
@@ -421,24 +522,25 @@ public class GameView {
 
         showAlert("Hint", "All cells are already filled correctly!");
     }
-    
-    
+
     /*
     * Called when the player completes the puzzle
     */
-    public void setOnComplete(Runnable r){
+    public void setOnComplete(Runnable r) {
         this.onComplete = r;
     }
-    
+
+
     /**
      * Shows a completion message when the puzzle is complete.
      */
     private void showCompletionMessage() {
         showAlert("Congratulations", "You have completed the crossword puzzle!");
-        
-        if (onComplete != null){
+
+        if (onComplete != null) {
             onComplete.run();
         }
+
     }
 
     /**
