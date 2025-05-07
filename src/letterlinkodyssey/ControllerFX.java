@@ -165,6 +165,11 @@ public class ControllerFX {
     public Stage getStage() {
         return stage;
     }
+    
+    public void returnToMainMenu() {
+        stage.setScene(view.getScene());
+        stage.show();
+    }
 
 
 }

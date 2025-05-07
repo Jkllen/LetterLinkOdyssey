@@ -305,7 +305,13 @@ public class ChapterFX {
 
         // If chapter ends, proceed
         if (currentDialogueIndex > getChapterEndIndex(currentChapter)) {
-            proceedToCrosswordGame();
+            if(currentChapter == 4){
+                System.out.println("Game Completed. Returning to main menu...");
+                controller.returnToMainMenu();
+            } else{
+                proceedToCrosswordGame();
+            }
+            
         }
     }
 
@@ -330,7 +336,7 @@ public class ChapterFX {
                 Integer.MAX_VALUE; // Assume no end for future chapters yet
         };
     }
-
+    
 
     private void animateText(Label label, String text) {
         isAnimating = true;

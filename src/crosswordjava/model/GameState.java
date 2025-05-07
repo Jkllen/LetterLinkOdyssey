@@ -53,7 +53,7 @@ public class GameState {
         if (wordTarget <= 10) {
             this.availableHints = 15; // Easy difficulty
         } else if (wordTarget <= 20) {
-            this.availableHints = 10; // Medium Difficulty
+            this.availableHints = 500; // Medium Difficulty
         } else {
             this.availableHints = 8; // Hard Difficulty
         }

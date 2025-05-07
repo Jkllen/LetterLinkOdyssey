@@ -75,11 +75,11 @@ public class GameView {
     public Parent getRoot() {
         return root;
     }
-    
+
     /*
-    * Getter Method for the Help Button
-    */
-    public Button getHelpButton(){
+     * Getter Method for the Help Button
+     */
+    public Button getHelpButton() {
         return helpButton;
     }
 
@@ -97,6 +97,7 @@ public class GameView {
         topContainer.setPadding(new Insets(5, 10, 5, 10));
 
         Label titleLabel = new Label("Crossword");
+        titleLabel.setTranslateY(10);
         titleLabel.setStyle("-fx-text-fill: white");
         titleLabel.setFont(Font.font("System", FontWeight.BOLD, 24));
 
@@ -105,44 +106,125 @@ public class GameView {
 
         newGameButton = new Button("New Game");
         newGameButton.setTranslateX(-80);
-        newGameButton.setStyle("-fx-font-size: 12px;");
+        newGameButton.setTranslateY(-10);
+        newGameButton.setStyle(
+                "-fx-background-color: #4a6fa5; "
+                + // Medium blue shade
+                "-fx-text-fill: white; "
+                + // White text
+                "-fx-font-size: 12px; "
+                + "-fx-font-weight: bold; "
+                + "-fx-padding: 5 10 5 10; "
+                + // Top, right, bottom, left padding
+                "-fx-background-radius: 5; "
+                + // Rounded corners
+                "-fx-border-color: #2a4a7a; "
+                + // Slightly darker border
+                "-fx-border-width: 1; "
+                + "-fx-border-radius: 5; "
+                + "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 5, 0, 0, 1);" // Subtle shadow
+        );
         newGameButton.setOnAction(e -> generateNewPuzzle());
 
         checkButton = new Button("Check");
         checkButton.setTranslateX(420);
-        checkButton.setStyle("-fx-font-size: 12px;");
+        checkButton.setTranslateY(-10);
+        checkButton.setStyle(
+                "-fx-background-color: #4a6fa5; "
+                + // Medium blue shade
+                "-fx-text-fill: white; "
+                + // White text
+                "-fx-font-size: 12px; "
+                + "-fx-font-weight: bold; "
+                + "-fx-padding: 5 10 5 10; "
+                + // Top, right, bottom, left padding
+                "-fx-background-radius: 5; "
+                + // Rounded corners
+                "-fx-border-color: #2a4a7a; "
+                + // Slightly darker border
+                "-fx-border-width: 1; "
+                + "-fx-border-radius: 5; "
+                + "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 5, 0, 0, 1);" // Subtle shadow
+        );
         checkButton.setOnAction(e -> checkPuzzle());
 
         hintButton = new Button("Hint");
         hintButton.setTranslateX(420);
-        hintButton.setStyle("-fx-font-size: 12px;");
+        hintButton.setTranslateY(-10);
+        hintButton.setStyle(
+                "-fx-background-color: #4a6fa5; "
+                + // Medium blue shade
+                "-fx-text-fill: white; "
+                + // White text
+                "-fx-font-size: 12px; "
+                + "-fx-font-weight: bold; "
+                + "-fx-padding: 5 10 5 10; "
+                + // Top, right, bottom, left padding
+                "-fx-background-radius: 5; "
+                + // Rounded corners
+                "-fx-border-color: #2a4a7a; "
+                + // Slightly darker border
+                "-fx-border-width: 1; "
+                + "-fx-border-radius: 5; "
+                + "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 5, 0, 0, 1);" // Subtle shadow
+        );
         hintButton.setOnAction(e -> provideHint());
 
         helpButton = new Button("Help");
-        helpButton.setTranslateX(400);
-        helpButton.setTranslateY(380);
-        helpButton.setStyle("-fx-font-size: 12px;");
+        helpButton.setTranslateX(380);
+        helpButton.setTranslateY(320);
+        helpButton.setStyle(
+                "-fx-background-color: #4a6fa5; "
+                + // Medium blue shade
+                "-fx-text-fill: white; "
+                + // White text
+                "-fx-font-size: 12px; "
+                + "-fx-font-weight: bold; "
+                + "-fx-padding: 5 10 5 10; "
+                + // Top, right, bottom, left padding
+                "-fx-background-radius: 5; "
+                + // Rounded corners
+                "-fx-border-color: #2a4a7a; "
+                + // Slightly darker border
+                "-fx-border-width: 1; "
+                + "-fx-border-radius: 5; "
+                + "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 5, 0, 0, 1);" // Subtle shadow
+        );
         helpButton.setOnAction(e -> App.switchToHelp());
 
         difficultyButton = new Button("Difficulty: Medium");
         difficultyButton.setTranslateX(-250);
-        difficultyButton.setStyle("-fx-font-size: 12px;");
+        difficultyButton.setTranslateY(-10);
+        difficultyButton.setStyle(
+                "-fx-background-color: #4a6fa5; "
+                + // Medium blue shade
+                "-fx-text-fill: white; "
+                + // White text
+                "-fx-font-size: 12px; "
+                + "-fx-font-weight: bold; "
+                + "-fx-padding: 5 10 5 10; "
+                + // Top, right, bottom, left padding
+                "-fx-background-radius: 5; "
+                + // Rounded corners
+                "-fx-border-color: #2a4a7a; "
+                + // Slightly darker border
+                "-fx-border-width: 1; "
+                + "-fx-border-radius: 5; "
+                + "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 5, 0, 0, 1);" // Subtle shadow
+        );
         difficultyButton.setOnAction(e -> showDifficultyMenu());
-        
-        pauseBtn = new Button("");
-        pauseBtn.setAlignment(Pos.TOP_RIGHT);
-        pauseBtn.setOnAction(e -> {
-           //logic method here
-        });
+
         // Add health label
         healthLabel = new Label("Health: 30");
+        healthLabel.setTranslateX(-60);
         healthLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: bold;");
 
         // Add Hint label
         hintsLabel = new Label("Hints: " + gameState.getAvailableHints());
+        hintsLabel.setTranslateX(-60);
         hintsLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: bold;");
 
-        buttonBar.getChildren().addAll(newGameButton, checkButton, hintButton, helpButton, pauseBtn, difficultyButton,
+        buttonBar.getChildren().addAll(newGameButton, checkButton, hintButton, helpButton, difficultyButton,
                 healthLabel, hintsLabel);
         topContainer.getChildren().addAll(titleLabel, buttonBar);
         root.setTop(topContainer);
@@ -152,12 +234,12 @@ public class GameView {
         crosswordGridPane.setAlignment(Pos.CENTER_LEFT);
         crosswordGridPane.setHgap(2);
         crosswordGridPane.setVgap(2);
-       
+
         /*
-        * Add Margin to the Border Pane to nudge away the crosswordGrid.
-        * (This is an alternative method for to Manually adjust the Grid in BorderPane)
-        * Insets: top = 0, right = 0, bottom = 50, left = 100;
-        */ 
+         * Add Margin to the Border Pane to nudge away the crosswordGrid.
+         * (This is an alternative method for to Manually adjust the Grid in BorderPane)
+         * Insets: top = 0, right = 0, bottom = 50, left = 100;
+         */
         BorderPane.setMargin(crosswordGridPane, new Insets(0, 0, 50, 100));
         crosswordGridPane.setPadding(new Insets(5));
         initializeGridUI();
@@ -276,14 +358,6 @@ public class GameView {
                 if (gameState.checkInput(row, col, input)) {
                     cell.setStyle("-fx-alignment: center; -fx-text-fill: black;");
                     gameState.getGrid().setUserInput(row, col, true);
-                }
-
-                if (gameState.checkInput(row, col, input)) {
-                    gameState.getGrid().setUserInput(row, col, true);
-                }
-
-                if (gameState.isPuzzleComplete()) {
-                    showCompletionMessage();
                 }
             }
         });
@@ -467,6 +541,9 @@ public class GameView {
                 disableInputs(); // Prevent further interaction
             }
         }
+        if (gameState.isPuzzleComplete()) {
+            showCompletionMessage();
+        }
     }
 
     /**
@@ -534,12 +611,11 @@ public class GameView {
     }
 
     /*
-    * Called when the player completes the puzzle
-    */
+     * Called when the player completes the puzzle
+     */
     public void setOnComplete(Runnable r) {
         this.onComplete = r;
     }
-
 
     /**
      * Shows a completion message when the puzzle is complete.

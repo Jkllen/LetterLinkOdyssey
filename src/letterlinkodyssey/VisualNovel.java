@@ -17,7 +17,7 @@ public class VisualNovel extends Application {
 
         //Set the scene and show the window
         primaryStage.setScene(view.getScene());
-        primaryStage.setTitle("Letter Link Odessey");
+        primaryStage.setTitle("Letter Link Odyssey");
         primaryStage.setResizable(false);
         primaryStage.show();
     }
