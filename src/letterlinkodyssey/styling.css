@@ -1,0 +1,30 @@
+/* slider-styles.css */
+
+/* Main Slider Track */
+.slider .track {
+    -fx-background-color: #e0d5c8;  /* Light beige */
+    -fx-background-radius: 3px;
+    -fx-pref-height: 6px;
+}
+
+/* Filled Progress Track */
+.slider .filled-track {
+    -fx-background-color: #8b6b4a;  /* Medium brown */
+    -fx-background-radius: 3px;
+}
+
+/* Slider Thumb (Draggable Circle) */
+.slider .thumb {
+    -fx-background-color: #5a3921;  /* Dark brown */
+    -fx-background-radius: 8px;
+    -fx-pref-width: 16px;
+    -fx-pref-height: 16px;
+}
+
+/* Hover Effect */
+.slider .thumb:hover {
+    -fx-background-color: #3e2723;  /* Darker brown */
+    -fx-scale-x: 1.2;
+    -fx-scale-y: 1.2;
+}
+

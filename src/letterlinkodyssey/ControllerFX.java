@@ -66,7 +66,10 @@ public class ControllerFX {
             });
         });
 
-
+        view.getTutorialButton().setOnAction( e -> {
+           TutorialFX tutorial = new TutorialFX(stage, this);
+           tutorial.display();
+        });
         
         view.getOptionsButton().setOnAction(event -> {
             // Set the flag to indicate the user is accessing from the Main Menu

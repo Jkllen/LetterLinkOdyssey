@@ -50,9 +50,10 @@ public class OptionsMenuFX {
         leftPanel.setPrefWidth(180);
         
         Button btnStart = createNavButton("Start", e -> {
-            updateTitle("Start");
-            //stage.getScene(view.getNewGameButton().getScene());
-        });
+                updateTitle("Start");
+                new NameEntryFX(stage, controller).display();
+            });
+
         Button btnSave = createNavButton("Save", e -> {
             showSaveLoadPanel(true);
             updateTitle("Save");
@@ -146,7 +147,9 @@ public class OptionsMenuFX {
     private Button createNavButton(String text, EventHandler<ActionEvent> eventHandler) {
         Button btn = new Button(text);
         btn.setPrefWidth(160);
-        btn.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 16px;");
+        btn.setTranslateY(-25);
+        btn.setStyle("-fx-text-fill: #8b6b4a; -fx-font-size: 16px; -fx-font-weight: bold; " +
+                      "-fx-background-radius: 15; -fx-padding: 5 15; -fx-cursor: hand;");
         
         btn.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> e.consume());
         
@@ -171,7 +174,7 @@ public class OptionsMenuFX {
     private void addPreferencesSettings() {
         // Rollback Mode
         Label rollbackTitle = new Label("Rollback Mode");
-        rollbackTitle.setStyle("-fx-text-fill: white; -fx-font-size: 16px;");
+        rollbackTitle.setStyle("-fx-text-fill: #5a3921; -fx-font-size: 18px; -fx-font-weight: bold;");
         
         Label disable = new Label("Disable");
         Label left = new Label("Left");
@@ -180,14 +183,18 @@ public class OptionsMenuFX {
 
         List<Label> rollbackOptions = List.of(disable, left, right);
         for (Label label : rollbackOptions) {
-            label.setStyle("-fx-text-fill: gray; -fx-font-size: 16px; -fx-underline: true; -fx-cursor: hand;");
+            label.setStyle("-fx-text-fill: #8b6b4a; -fx-font-size: 16px; -fx-font-weight: bold; " +
+                      "-fx-background-radius: 10; -fx-padding: 5 15; -fx-cursor: hand;");
             label.setOnMouseClicked(e -> {
                 GameSettings.getInstance().setRollbackMode(label.getText());
 
                 // Highlight selected one
                 for (Label lbl : rollbackOptions) {
                     boolean isSelected = lbl == label;
-                    lbl.setStyle("-fx-text-fill: " + (isSelected ? "white" : "gray") + "; -fx-font-size: 16px; -fx-underline: true; -fx-cursor: hand;");
+                    lbl.setStyle("-fx-text-fill: " + (isSelected ? "#ffffff" : "#8b6b4a")
+                            + "; -fx-font-size: 16px; -fx-font-weight: bold; "
+                            + "-fx-background-radius: 10; -fx-padding: 5 15; -fx-cursor: hand; "
+                            + (isSelected ? "-fx-background-color: #5a3921;" : ""));
                 }
 
                 // Save to DB
@@ -199,7 +206,9 @@ public class OptionsMenuFX {
         String current = GameSettings.getInstance().getRollbackMode();
         for (Label label : rollbackOptions) {
             if (label.getText().equalsIgnoreCase(current)) {
-                label.setStyle("-fx-text-fill: white; -fx-font-size: 14px; -fx-underline: true; -fx-cursor: hand;");
+                label.setStyle("-fx-text-fill: #ffffff; -fx-font-size: 16px; -fx-font-weight: bold; "
+                        + "-fx-background-radius: 10; -fx-padding: 5 15; -fx-cursor: hand; "
+                        + "-fx-background-color: #5a3921;");
             }
         }
 
@@ -209,9 +218,11 @@ public class OptionsMenuFX {
         // Skip unseen checkbox
         Label skipLabel = new Label("Skip");
         skipLabel.setTranslateX(50);
-        skipLabel.setStyle("-fx-text-fill: white; -fx-font-size: 16px;");
+        skipLabel.setStyle("-fx-text-fill: #5a3921; -fx-font-size: 18px; -fx-font-weight: bold;");
 
         Button skipUnseenBtn = new Button("Unseen Text");
+        skipUnseenBtn.setStyle("-fx-text-fill: #8b6b4a; -fx-font-size: 16px; -fx-font-weight: bold; " +
+                      "-fx-background-radius: 10; -fx-padding: 5 15; -fx-cursor: hand;");
         skipUnseenBtn.setPrefWidth(160);
         skipUnseenBtn.setTranslateX(-10);
         skipUnseenBtn.setStyle(getToggleStyle(GameSettings.getInstance().isSkipUnseenText()));
@@ -225,8 +236,11 @@ public class OptionsMenuFX {
 
         // Text Speed slider
         Label textSpeedLabel = new Label("Text Speed");
-        textSpeedLabel.setStyle("-fx-text-fill: white;  -fx-font-size: 16px;");
+        textSpeedLabel.setStyle("-fx-text-fill: #5a3921; -fx-font-size: 18px; -fx-font-weight: bold;");
         Slider textSpeedSlider = new Slider(0, 1, GameSettings.getInstance().getTextSpeed());
+        textSpeedSlider.getStylesheets().add(
+                getClass().getResource("styling.css").toExternalForm()
+        );
         textSpeedSlider.setShowTickLabels(true);
         textSpeedSlider.setShowTickMarks(true);
         textSpeedSlider.setMajorTickUnit(1);
@@ -263,8 +277,12 @@ public class OptionsMenuFX {
 
         // Auto-forward slider
         Label autoForwardLabel = new Label("Auto-Forward Time");
-        autoForwardLabel.setStyle("-fx-text-fill: white; -fx-font-size: 16px;");
+        autoForwardLabel.setStyle("-fx-text-fill: #5a3921; -fx-font-size: 18px; -fx-font-weight: bold;");
         Slider autoForwardSlider = new Slider(0, 1, GameSettings.getInstance().getAutoForwardTime());
+        autoForwardSlider.getStylesheets().add(
+                getClass().getResource("styling.css").toExternalForm()
+        );
+            
         autoForwardSlider.setShowTickLabels(true);
         autoForwardSlider.setShowTickMarks(true);
         autoForwardSlider.setMajorTickUnit(1);
@@ -310,8 +328,22 @@ public class OptionsMenuFX {
     
      private String getToggleStyle(boolean enabled) {
         return enabled
-            ? "-fx-background-color: transparent; -fx-text-fill: darkred; -fx-font-size: 14px;"
-            : "-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;";
+                ? "-fx-background-color: rgba(139, 107, 74, 0.3); "
+                + // Light brown semi-transparent
+                "-fx-text-fill: #5a1a1a; "
+                + // Darker red-brown for active state
+                "-fx-font-size: 14px; "
+                + "-fx-font-weight: bold; "
+                + "-fx-border-color: #5a1a1a; "
+                + "-fx-border-radius: 10; "
+                + "-fx-background-radius: 10; "
+                + "-fx-padding: 5 10;"
+                : "-fx-background-color: transparent; "
+                + "-fx-text-fill: #8b6b4a; "
+                + // Medium brown for inactive
+                "-fx-font-size: 14px; "
+                + "-fx-border-color: transparent; "
+                + "-fx-padding: 5 10;";
     }
 
     private RadioButton styledRadio(String label, ToggleGroup group, boolean selected) {

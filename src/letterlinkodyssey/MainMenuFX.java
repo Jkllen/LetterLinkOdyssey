@@ -2,6 +2,7 @@ package letterlinkodyssey;
 
 import java.io.File;
 import javafx.event.ActionEvent;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.effect.DropShadow;
@@ -15,7 +16,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.AudioClip;
 
 public class MainMenuFX {
-    private Button newGame, loadGame, options, exit;
+    private Button newGame, loadGame, options, tutorial, exit;
     private ImageView backgroundImageView;
     private Pane root;
     private Scene scene;
@@ -29,6 +30,8 @@ public class MainMenuFX {
         newGame = new Button("New Game");
         loadGame = new Button("Load Game");
         options = new Button("Options");
+        tutorial = new Button ("?");
+        
         exit = new Button("Exit");
         
         exit.setOnAction(e -> {
@@ -50,29 +53,33 @@ public class MainMenuFX {
         addClickSound(newGame, clickSound);
         addClickSound(loadGame, clickSound);
         addClickSound(options, clickSound);
+        addClickSound(tutorial, clickSound);
         addClickSound(exit, clickSound);
         
         // Style buttons
         styleButton(newGame, "Irish Grover");
         styleButton(loadGame, "Irish Grover");
+        styleButton(tutorial, "Irish Grover");
         styleButton(options, "Irish Grover");
         styleButton(exit, "Irish Grover");
 
-        // Set button positions
+        // Set button positions {X,Y}
         setPosition(newGame, 70, 90);
         setPosition(loadGame, 70, 170);
         setPosition(options, 70, 250);
         setPosition(exit, 70, 330);
+        setPosition(tutorial, 70, 395);
 
         // Drop shadow
         DropShadow glow = new DropShadow(20, Color.GOLD);
         addHoverEffect(newGame, glow);
         addHoverEffect(loadGame, glow);
+        addHoverEffect(tutorial, glow);
         addHoverEffect(options, glow);
         addHoverEffect(exit, glow);
 
         root = new Pane();
-        root.getChildren().addAll(backgroundImageView, newGame, loadGame, options, exit);
+        root.getChildren().addAll(backgroundImageView, newGame, loadGame, tutorial, options, exit);
 
         scene = new Scene(root, 800, 455);
     }
@@ -117,6 +124,10 @@ public class MainMenuFX {
     
     public Button getOptionsButton(){
         return options;
+    }
+    
+    public Button getTutorialButton(){
+        return tutorial;
     }
 
     public Pane getRootPane() {
