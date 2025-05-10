@@ -1,5 +1,6 @@
 package letterlinkodyssey;
 
+import java.io.File;
 import java.sql.*;
 
 import javafx.scene.Scene;
@@ -93,12 +94,27 @@ public class GameSettings {
     }
 
     // --- Database Integration ---
-    private Connection connect() throws SQLException {
-        return DriverManager.getConnection("jdbc:mysql://localhost:3306/mygame?zeroDateTimeBehavior=CONVERT_TO_NULL", "root", "password");
+    private static Connection getConnection() throws SQLException {
+        try {
+            Class.forName("org.sqlite.JDBC");
+        } catch (ClassNotFoundException e) {
+            throw new SQLException("SQLite JDBC Driver not found.");
+        }
+
+        // Adjusted path: database is located under src/data
+        String dbPath = "src/data/mygame.db";
+        File dbFile = new File(dbPath);
+
+        // Create parent directory if it doesn't exist
+        if (!dbFile.getParentFile().exists()) {
+            dbFile.getParentFile().mkdirs();
+        }
+
+        return DriverManager.getConnection("jdbc:sqlite:" + dbPath);
     }
 
     public void loadSettingsFromDatabase() {
-        try (Connection conn = connect(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery("SELECT * FROM settings LIMIT 1")) {
+        try (Connection conn = getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery("SELECT * FROM settings LIMIT 1")) {
 
             if (rs.next()) {
                 skipUnseenText = rs.getBoolean("skip_unseen");
@@ -108,21 +124,27 @@ public class GameSettings {
             }
 
         } catch (SQLException e) {
+            System.err.println("Error loading settings from SQLite database:");
             e.printStackTrace();
         }
     }
 
     public void saveSettingsToDatabase() {
-        try (Connection conn = connect()) {
-            String query = "REPLACE INTO settings (id, skip_unseen, text_speed, auto_forward, rollback_mode) VALUES (1, ?, ?, ?, ?)";
+        try (Connection conn = getConnection()) {
+            
+            String query = "INSERT OR REPLACE INTO settings (id, skip_unseen, text_speed, auto_forward, rollback_mode) "
+                    + "VALUES (1, ?, ?, ?, ?)";
+
             try (PreparedStatement stmt = conn.prepareStatement(query)) {
                 stmt.setBoolean(1, skipUnseenText);
                 stmt.setDouble(2, textSpeed);
                 stmt.setDouble(3, autoForwardTime);
                 stmt.setString(4, rollbackMode);
                 stmt.executeUpdate();
+                System.out.println("Settings saved successfully");
             }
         } catch (SQLException e) {
+            System.err.println("Error saving settings:");
             e.printStackTrace();
         }
     }
